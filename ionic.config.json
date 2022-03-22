@@ -1,0 +1,7 @@
+{
+  "name": "RedPerceptron",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
