@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Log de la red</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content">
+    <pre style="font-size: 13px">
+      <ng-container *ngFor="let log of listLog">
+        {{'> ' + log }}
+      </ng-container>
+    </pre>
+  </div>
+</ion-content>

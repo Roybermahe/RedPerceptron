@@ -11,6 +11,14 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'data-analisis',
+    loadChildren: () => import('./data-analisis/data-analisis.module').then( m => m.DataAnalisisPageModule)
+  },
+  {
+    path: 'log-red',
+    loadChildren: () => import('./log-red/log-red.module').then( m => m.LogRedPageModule)
+  },
 ];
 
 @NgModule({

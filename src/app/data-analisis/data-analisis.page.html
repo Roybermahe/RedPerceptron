@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Definición de patrones, entradas y salidas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <ion-grid *ngIf="dataAnalist">
+      <ion-row>
+        <ion-col size="4">
+          <ion-text color="medium">número de entradas</ion-text>
+          <h4><strong>E:</strong>  {{dataAnalist.inputs}}</h4>
+          <table class="table-sm table table-bordered w-25 mx-auto text-center">
+            <tbody>
+            <ng-container *ngFor="let items of dataAnalist.inputsArray">
+              <tr><td>{{items}}</td></tr>
+            </ng-container>
+            </tbody>
+          </table>
+        </ion-col>
+        <ion-col size="4">
+          <ion-text color="medium">número de salidas</ion-text>
+          <h4><strong>S:</strong>  {{dataAnalist.outputs}}</h4>
+          <table class="table-sm table table-bordered w-25 mx-auto text-center">
+            <tbody>
+            <ng-container *ngFor="let items of dataAnalist.outputsArray">
+              <tr><td>{{items}}</td></tr>
+            </ng-container>
+            </tbody>
+          </table>
+        </ion-col>
+        <ion-col size="4">
+          <ion-text color="medium">número de patrones</ion-text>
+          <h4><strong>P:</strong>  {{dataAnalist.patterns}}</h4>
+          <table class="table-sm table table-bordered w-25 mx-auto text-center">
+            <tbody>
+            <ng-container *ngFor="let items of dataAnalist.patternsArray">
+              <tr><td>{{items}}</td></tr>
+            </ng-container>
+            </tbody>
+          </table>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+</ion-content>

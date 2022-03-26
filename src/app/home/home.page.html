@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Upload Files
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -14,7 +14,37 @@
   </ion-header>
 
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="4">
+          <strong>Subir datos para la red</strong> <br>
+          <input type="file" class="file-upload" accept=".text/csv, .csv" (change)="uploadFile($event)">
+        </ion-col>
+        <ion-col style="height: 100%;" size="8" class="table-responsive">
+          <ion-text>Datos del archivo</ion-text>
+          <table  class="table table-bordered table" *ngIf="tableDataFile.length > 0">
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <ng-container *ngFor="let columns of tableDataFile[0]">
+                <th scope="col">{{columns}}
+                </th>
+              </ng-container>
+            </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let rows of tableDataFile; let i = index">
+                <tr *ngIf="i > 0">
+                  <th scope="col">{{ --i }}</th>
+                  <ng-container *ngFor="let data of tableDataFile[i]">
+                    <td>{{data | slice:0:10}}</td>
+                  </ng-container>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 </ion-content>

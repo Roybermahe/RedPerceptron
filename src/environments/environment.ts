@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  storageRedData: 'STORAGE_DATA_RED',
+  prevStorageRed: 'PREVIUS_DATA_STORAGE'
 };
 
 /*
