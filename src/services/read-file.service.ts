@@ -26,19 +26,23 @@ export class ReadFileService {
         this.logRed.up('1) analizamos patrones');
         arr.pop();
         const columns = arr.reverse().pop();
-        const befArr = arr;
-        const set = new Set(befArr);
-        const patterns = set.size;
-        const patternsArr = ([...set]).map((rep: any) => rep.split(',')).map(slc => slc.slice(0, patterns-1 ));
-        this.logRed.up('patrones: '+ patterns);
-        this.logRed.up(patternsArr + '');
-        // analizamos entradas
         const inputs = columns.split(',').filter(x => x.includes('X') || x.includes('x'));
+        const outputs = columns.split(',').filter(x => x.includes('Y') || x.includes('y'));
+        
+        const befArr = arr;
+        
+        const set = new Set(befArr);
+        
+        const patterns = set.size;
+        const patternsArr = ([...set]).map((rep: any) => rep.split(',')).map(slc => slc.slice(0, inputs.length ));
+        
+        this.logRed.up('patrones: '+ patterns);
+        this.logRed.up(patternsArr + '')
+        // analizamos entradas
         this.logRed.up('entradas: '+ inputs.length);
         this.logRed.up(inputs);
         // analizamos salidas
-        const outputs = columns.split(',').filter(x => x.includes('Y') || x.includes('y'));
-        const outputsArr = ([...set]).map((rep: any) => rep.split(',')).map(slc => slc.slice(patterns-1));
+        const outputsArr = ([...set]).map((rep: any) => rep.split(',')).map(slc => slc.slice(outputs.length));
         this.logRed.up('salidas: '+ outputs.length);
         this.logRed.up(outputs);
         this.logRed.up(outputsArr + '');
