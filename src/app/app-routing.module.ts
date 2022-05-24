@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'configuracion',
     loadChildren: () => import('./configuracion/configuracion.module').then( m => m.ConfiguracionPageModule)
   },
+  {
+    path: 'stadistic',
+    loadChildren: () => import('./stadistic/stadistic.module').then( m => m.StadisticPageModule)
+  },
 ];
 
 @NgModule({

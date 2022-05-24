@@ -41,10 +41,11 @@ export class ReadFileService {
         this.logRed.up('entradas: '+ inputs.length);
         this.logRed.up(inputs);
         // analizamos salidas
-        const outputsArr = ([...set]).map((rep: any) => rep.split(',')).map(slc => slc.slice(outputs.length));
+        const outputsArr = ([...set]).map((rep: any) => rep.split(',')).map(slc => slc.slice(inputs.length));
         this.logRed.up('salidas: '+ outputs.length);
         this.logRed.up(outputs);
         this.logRed.up(outputsArr + '');
+        console.log(outputsArr);
         this._dataAnalitics.next({ inputs: inputs.length, inputsArray: inputs, patterns, patternsArray: patternsArr, outputs: outputs.length, outputsArray: outputs, outputsArrContent: outputsArr });
       }
     });

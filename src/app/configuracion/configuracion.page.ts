@@ -5,6 +5,7 @@ import {logRedService} from '../../services/log-red.service';
 import {PerceptronService} from '../../models/base/perceptron.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AbstractRedPerceptron} from '../../models/base/RedPerceptron.base';
+import {AlertController} from "@ionic/angular";
 
 @Component({
   selector: 'app-configuracion',
@@ -26,6 +27,7 @@ export class ConfiguracionPage implements OnInit {
     private perceptronSvc: PerceptronService,
     private dataAnalitics: ReadFileService,
     private logRed: logRedService,
+    private alertCtl : AlertController,
     private fb: FormBuilder
   ) {
   }
@@ -43,6 +45,8 @@ export class ConfiguracionPage implements OnInit {
     });
     this.dataAnalitics.analiticFile.subscribe(resp => {
       this.datosDeRed = resp;
+      this.matrizDePeso = [];
+      this.vectorDeUmbrales = [];
       this.llenarMatrizDePeso(resp.inputs, resp.outputs);
       this.llenarVectorDeUmbrales(resp.outputs);
       this.perceptron = this.perceptronSvc.buildPerceptron('unicapa', this.matrizDePeso, this.vectorDeUmbrales);
@@ -84,7 +88,21 @@ export class ConfiguracionPage implements OnInit {
     this.perceptronSvc.getForms(this.perceptron, this.formUnicapa);
   }
 
-  submit() {
-    this.perceptron.entrenar({});
+  async submitUnicapa() {
+    const value = this.formUnicapa.value;
+    const condition1 = 0 < value.rata && value.rata <= 1;
+    const condition2 = 0 <= value.errMax && value.errMax < 1;
+    try{
+      if (condition1 === false || condition2 === false) {
+        throw new Error('Valores no validos');
+      }
+      this.perceptron = this.perceptronSvc.buildPerceptron('unicapa', this.matrizDePeso, this.vectorDeUmbrales);
+      this.perceptronSvc.getForms(this.perceptron, this.formUnicapa);
+      this.logRed.up('Iniciando entrenamiento');
+      this.perceptron.entrenar({});
+    } catch (e) {
+      const alert = await this.alertCtl.create({message: 'Por favor corrija los parametros de entrenamiento', mode: 'ios'});
+      await alert.present();
+    }
   }
 }

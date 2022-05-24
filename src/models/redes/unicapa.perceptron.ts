@@ -1,15 +1,33 @@
 import {AbstractRedPerceptron} from '../base/RedPerceptron.base';
 import {FormGroup, Validators} from '@angular/forms';
+import {Layer, Network} from 'synaptic';
 
 export class UnicapaPerceptron extends AbstractRedPerceptron {
 
   entrenar(data: any) {
-    for (let i = 0; i < this.EPS.inputs; i++) {
-      this.AplicacionDeFuncionSoma(i);
-      this.escalon(i);
-      this.erroresLineales(i);
-      this.erroresDelPatron(i);
-      this.modificacionPesosUmbrales(i);
+    const inputLayer = new Layer(this.EPS.inputs);
+    const outputLayer = new Layer(this.EPS.outputs);
+
+    inputLayer.project(outputLayer);
+
+    const myRed = new Network({
+      input: inputLayer,
+      hidden: [],
+      output: outputLayer
+    });
+
+    for (let iter = 0; iter < this.config.value.numIteraciones; iter++) {
+      this.logRed.up('Iteración número:'+(iter+1));
+      for (let i = 0; i < this.EPS.inputs; i++) {
+        const Xj = Array.from(this.EPS.patternsArray[i], x => +x);
+        myRed.activate(Xj);
+        this.AplicacionDeFuncionSoma(i);
+        this.escalon(i);
+        myRed.propagate(this.config.value.rata, this.yResults);
+        this.erroresLineales(i);
+        this.erroresDelPatron(i);
+        this.modificacionPesosUmbrales(i);
+      }
     }
   }
 
@@ -76,10 +94,10 @@ export class UnicapaPerceptron extends AbstractRedPerceptron {
     const parameters = this.config.value;
     const yd = this.EPS.outputsArrContent[index];
     this.logRed.up('Modificación de W');
-    for (let i = 0; i < this.EPS.outputs ; i++) {
-      for (let j = 0; j < this.EPS.inputs; j++) {
-        const nuevopeso = this.w[j][i] + parameters.rata*this.ElResults[i]*yd[j];
-        this.logRed.up(`W[${j+1}][${i+1}] = ${this.w[j][i]} + ${parameters.rata}*${this.ElResults[i]}*${yd[j]} = ${nuevopeso}`);
+    for (let j = 0; j < this.EPS.inputs ; j++) {
+      for (let i = 0; i < this.EPS.outputs; i++) {
+        const nuevopeso = this.w[j][i] + parameters.rata*this.ElResults[i]*yd[i];
+        this.logRed.up(`W[${j+1}][${i+1}] = ${this.w[j][i]} + ${parameters.rata}*${this.ElResults[i]}*${yd[i]} = ${nuevopeso}`);
         this.w[j][i] = nuevopeso;
       }
     }

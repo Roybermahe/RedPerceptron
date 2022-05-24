@@ -4,7 +4,7 @@ import {MulticapaPerceptron} from '../redes/multicapa.perceptron';
 import {AbstractRedPerceptron} from './RedPerceptron.base';
 import {logRedService} from '../../services/log-red.service';
 import {ReadFileService} from '../../services/read-file.service';
-import {FormGroup} from "@angular/forms";
+import {FormGroup} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
