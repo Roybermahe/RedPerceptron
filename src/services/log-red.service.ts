@@ -11,7 +11,6 @@ export class logRedService {
 
   up(message: string) {
     const data = [ ...this._logRead.getValue(), message ];
-    console.log(data);
     this._logRead.next(data);
   }
 }

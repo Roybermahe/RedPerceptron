@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'log-red',
     loadChildren: () => import('./log-red/log-red.module').then( m => m.LogRedPageModule)
   },
+  {
+    path: 'configuracion',
+    loadChildren: () => import('./configuracion/configuracion.module').then( m => m.ConfiguracionPageModule)
+  },
 ];
 
 @NgModule({

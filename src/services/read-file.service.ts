@@ -15,7 +15,7 @@ export class ReadFileService {
 
   public contentFile = this._dataFile.asObservable();
   public analiticFile = this._dataAnalitics.asObservable();
-  constructor(private logRed: logRedService) {
+  constructor(private logRed:logRedService) {
     this._dataFile.subscribe(resp => {
       this.logRed.up('Se obtiene la data almacenada');
       this.logRed.up(resp + '');
@@ -28,16 +28,15 @@ export class ReadFileService {
         const columns = arr.reverse().pop();
         const inputs = columns.split(',').filter(x => x.includes('X') || x.includes('x'));
         const outputs = columns.split(',').filter(x => x.includes('Y') || x.includes('y'));
-        
+
         const befArr = arr;
-        
+
         const set = new Set(befArr);
-        
+
         const patterns = set.size;
         const patternsArr = ([...set]).map((rep: any) => rep.split(',')).map(slc => slc.slice(0, inputs.length ));
-        
         this.logRed.up('patrones: '+ patterns);
-        this.logRed.up(patternsArr + '')
+        this.logRed.up(patternsArr + '');
         // analizamos entradas
         this.logRed.up('entradas: '+ inputs.length);
         this.logRed.up(inputs);
@@ -46,7 +45,7 @@ export class ReadFileService {
         this.logRed.up('salidas: '+ outputs.length);
         this.logRed.up(outputs);
         this.logRed.up(outputsArr + '');
-        this._dataAnalitics.next({ inputs: inputs.length, inputsArray: inputs, patterns, patternsArray: patternsArr, outputs: outputs.length, outputsArray: outputs });
+        this._dataAnalitics.next({ inputs: inputs.length, inputsArray: inputs, patterns, patternsArray: patternsArr, outputs: outputs.length, outputsArray: outputs, outputsArrContent: outputsArr });
       }
     });
   }

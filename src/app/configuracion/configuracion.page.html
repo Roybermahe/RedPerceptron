@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>configuracion</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-start ion-padding-end">
+  <ion-accordion-group (ionChange)="generateRedData($event)">
+    <ion-accordion value="unicapa">
+      <ion-item slot="header">
+        <ion-label>Perceptron Unicapa</ion-label>
+      </ion-item>
+      <ion-list slot="content" lines="none">
+        <ion-item lines="none" style="width: 100%">
+          <ion-card mode="ios" style="width: 100%">
+            <ion-card-content>
+              <!--perceptron unicapa-->
+              <ion-grid>
+                <ion-row>
+                  <form style="width: 100%" [formGroup]="formUnicapa">
+                    <ion-text>Parametros de entrenamiento</ion-text>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Rata de aprendizaje</ion-label>
+                      <ion-input placeholder="valores entre menores igual a 1 y diferentes de 0" type="number" formControlName="rata"></ion-input>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Núm. Iteraciones</ion-label>
+                      <ion-input placeholder="Número de iteraciones de la red" type="number" formControlName="numIteraciones"></ion-input>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Err. Maximo permitido</ion-label>
+                      <ion-input placeholder="Valores entre 0 y 0.9999..." type="number" formControlName="errMax"></ion-input>
+                    </ion-item>
+
+                    <ion-label>Algoritmo de entrenamiento</ion-label>
+                    <ion-chip>{{formUnicapa.controls['reglaDelta'].value ? ('Regla Delta').toUpperCase(): ''}}</ion-chip>
+
+                    <ion-label>Función de activación</ion-label>
+                    <ion-chip>{{formUnicapa.controls['funcionActivacion'].value.toString().toUpperCase()}}</ion-chip>
+                  </form>
+                </ion-row>
+                <ion-row>
+                  <ion-text>Definición de pesos y umbrales</ion-text>
+                </ion-row>
+                <ion-row>
+                  <ion-col size-xl="6" size-xs="12" size-sm="12" size-lg="6">
+                    <ion-item>
+                      <ion-label slot="start">W<span class="subindice">(ExS)</span> =</ion-label>
+                      <pre slot="start">{{matrizDePesoString}}</pre>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col  size-xl="6" size-xs="12" size-sm="12" size-lg="6">
+                    <ion-item>
+                      <ion-label slot="start">U<span class="subindice">(S)</span> =</ion-label>
+                      <pre slot="start">{{vectorUmbralesString}}</pre>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <form [formGroup]="formUnicapa" (ngSubmit)="submit()">
+                    <ion-button type="submit">Entrenar</ion-button>
+                  </form>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+      </ion-list>
+    </ion-accordion>
+    <ion-accordion value="multicapa">
+      <ion-item slot="header">
+        <ion-label>Perceptron Multicapa</ion-label>
+      </ion-item>
+      <ion-list slot="content" lines="none">
+        <ion-item lines="none" style="width: 100%">
+          <ion-card mode="ios" style="width: 100%">
+            <ion-card-content>
+              <!--perceptron multicapa-->
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+      </ion-list>
+    </ion-accordion>
+  </ion-accordion-group>
+</ion-content>
