@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { StadisticPageRoutingModule } from './stadistic-routing.module';
 
 import { StadisticPage } from './stadistic.page';
+import {NgChartsModule} from 'ng2-charts';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    StadisticPageRoutingModule
+    StadisticPageRoutingModule,
+    NgChartsModule
   ],
   declarations: [StadisticPage]
 })

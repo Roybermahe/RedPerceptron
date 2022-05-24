@@ -8,6 +8,7 @@ export class UnicapaPerceptron extends AbstractRedPerceptron {
     const inputLayer = new Layer(this.EPS.inputs);
     const outputLayer = new Layer(this.EPS.outputs);
 
+    this.logRed.cleanData();
     inputLayer.project(outputLayer);
 
     const myRed = new Network({
@@ -15,9 +16,9 @@ export class UnicapaPerceptron extends AbstractRedPerceptron {
       hidden: [],
       output: outputLayer
     });
-
     for (let iter = 0; iter < this.config.value.numIteraciones; iter++) {
       this.logRed.up('Iteración número:'+(iter+1));
+      this.logRed.upLabels('Iter_'+(iter+1));
       for (let i = 0; i < this.EPS.inputs; i++) {
         const Xj = Array.from(this.EPS.patternsArray[i], x => +x);
         myRed.activate(Xj);
@@ -26,6 +27,7 @@ export class UnicapaPerceptron extends AbstractRedPerceptron {
         myRed.propagate(this.config.value.rata, this.yResults);
         this.erroresLineales(i);
         this.erroresDelPatron(i);
+        this.logRed.upData({ data: this.Ep, label: 'Patron_'+(i+1)});
         this.modificacionPesosUmbrales(i);
       }
     }
