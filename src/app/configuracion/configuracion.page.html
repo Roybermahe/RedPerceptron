@@ -46,17 +46,22 @@
                   <ion-text>Definición de pesos y umbrales</ion-text>
                 </ion-row>
                 <ion-row>
-                  <ion-col size-xl="6" size-xs="12" size-sm="12" size-lg="6">
+                  <ion-col size-xl="5" size-xs="12" size-sm="12" size-lg="6">
                     <ion-item>
                       <ion-label slot="start">W<span class="subindice">(ExS)</span> =</ion-label>
                       <pre slot="start">{{matrizDePesoString}}</pre>
                     </ion-item>
                   </ion-col>
-                  <ion-col  size-xl="6" size-xs="12" size-sm="12" size-lg="6">
+                  <ion-col  size-xl="5" size-xs="12" size-sm="12" size-lg="6">
                     <ion-item>
                       <ion-label slot="start">U<span class="subindice">(S)</span> =</ion-label>
                       <pre slot="start">{{vectorUmbralesString}}</pre>
                     </ion-item>
+                  </ion-col>
+                  <ion-col>
+                    <ion-chip (click)="generateMatriz()">
+                      <ion-icon name="reload"></ion-icon>
+                    </ion-chip>
                   </ion-col>
                 </ion-row>
                 <ion-row>
@@ -97,7 +102,7 @@
                       <ion-item [formGroup]="layers">
                         <ion-item>
                           <ion-label position="floating">Función de activación</ion-label>
-                          <ion-select formControlName="activacion" interface="popover" placeholder="Select One">
+                          <ion-select formControlName="funcionActivacion" interface="popover" placeholder="Select One">
                             <ion-select-option value="tangente">Tangente hiperbolica</ion-select-option>
                             <ion-select-option value="sigmoide">Sigmoide</ion-select-option>
                             <ion-select-option value="seno">Seno</ion-select-option>
@@ -137,21 +142,169 @@
                   <ion-text>Definición de pesos y umbrales</ion-text>
                 </ion-row>
                 <ion-row>
-                  <ion-col size-xl="6" size-xs="12" size-sm="12" size-lg="6">
+                  <ion-col size-xl="5" size-xs="12" size-sm="12" size-lg="6">
                     <ion-item>
                       <ion-label slot="start">W<span class="subindice">(ExS)</span> =</ion-label>
                       <pre slot="start">{{matrizDePesoString}}</pre>
                     </ion-item>
                   </ion-col>
-                  <ion-col  size-xl="6" size-xs="12" size-sm="12" size-lg="6">
+                  <ion-col  size-xl="5" size-xs="12" size-sm="12" size-lg="6">
                     <ion-item>
                       <ion-label slot="start">U<span class="subindice">(S)</span> =</ion-label>
                       <pre slot="start">{{vectorUmbralesString}}</pre>
                     </ion-item>
                   </ion-col>
+                  <ion-col>
+                    <ion-chip (click)="generateMatriz()">
+                      <ion-icon name="reload"></ion-icon>
+                    </ion-chip>
+                  </ion-col>
                 </ion-row>
                 <ion-row>
                   <form [formGroup]="formMulticapa" (ngSubmit)="submitMulticapa()">
+                    <ion-button type="submit">Entrenar</ion-button>
+                  </form>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+      </ion-list>
+    </ion-accordion>
+    <ion-accordion value="adaline">
+      <ion-item slot="header">
+        <ion-label>Adaline</ion-label>
+      </ion-item>
+      <ion-list slot="content" lines="none">
+        <ion-item lines="none" style="width: 100%">
+          <ion-card mode="ios" style="width: 100%">
+            <ion-card-content>
+              <!--perceptron unicapa-->
+              <ion-grid>
+                <ion-row>
+                  <form style="width: 100%" [formGroup]="formAdaline">
+                    <ion-text>Parametros de entrenamiento</ion-text>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Rata de aprendizaje</ion-label>
+                      <ion-input placeholder="valores entre menores igual a 1 y diferentes de 0" type="number" formControlName="rata"></ion-input>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Núm. Iteraciones</ion-label>
+                      <ion-input placeholder="Número de iteraciones de la red" type="number" formControlName="numIteraciones"></ion-input>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Err. Maximo permitido</ion-label>
+                      <ion-input placeholder="Valores entre 0 y 0.9999..." type="number" formControlName="errMax"></ion-input>
+                    </ion-item>
+
+                    <ion-label>Algoritmo de entrenamiento</ion-label>
+                    <ion-chip>{{formAdaline.controls['reglaDelta'].value ? ('Regla Delta').toUpperCase(): ''}}</ion-chip>
+
+                    <ion-label>Función de activación</ion-label>
+                    <ion-chip>{{formAdaline.controls['funcionActivacion'].value.toString().toUpperCase()}}</ion-chip>
+                  </form>
+                </ion-row>
+                <ion-row>
+                  <ion-text>Definición de pesos y umbrales</ion-text>
+                </ion-row>
+                <ion-row>
+                  <ion-col size-xl="5" size-xs="12" size-sm="12" size-lg="6">
+                    <ion-item>
+                      <ion-label slot="start">W<span class="subindice">(ExS)</span> =</ion-label>
+                      <pre slot="start">{{matrizDePesoString}}</pre>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col  size-xl="5" size-xs="12" size-sm="12" size-lg="6">
+                    <ion-item>
+                      <ion-label slot="start">U<span class="subindice">(S)</span> =</ion-label>
+                      <pre slot="start">{{vectorUmbralesString}}</pre>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col>
+                    <ion-chip (click)="generateMatriz()">
+                      <ion-icon name="reload"></ion-icon>
+                    </ion-chip>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <form [formGroup]="formAdaline" (ngSubmit)="submitAdaline()">
+                    <ion-button type="submit">Entrenar</ion-button>
+                  </form>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+      </ion-list>
+    </ion-accordion>
+    <ion-accordion value="backpropagation">
+      <ion-item slot="header">
+        <ion-label>Backpropagation</ion-label>
+      </ion-item>
+      <ion-list slot="content" lines="none">
+        <ion-item lines="none" style="width: 100%">
+          <ion-card mode="ios" style="width: 100%">
+            <ion-card-content>
+              <!--perceptron unicapa-->
+              <ion-grid>
+                <ion-row>
+                  <form style="width: 100%" [formGroup]="formBackPropagation">
+                    <ion-text>Parametros de entrenamiento</ion-text>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Rata de aprendizaje</ion-label>
+                      <ion-input placeholder="valores entre menores igual a 1 y diferentes de 0" type="number" formControlName="rata"></ion-input>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Núm. Iteraciones</ion-label>
+                      <ion-input placeholder="Número de iteraciones de la red" type="number" formControlName="numIteraciones"></ion-input>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Err. Maximo permitido</ion-label>
+                      <ion-input placeholder="Valores entre 0 y 0.9999..." type="number" formControlName="errMax"></ion-input>
+                    </ion-item>
+
+                    <ion-label>Algoritmo de entrenamiento</ion-label>
+                    <ion-chip>{{formBackPropagation.controls['propagacionInversa'].value ? ('Propagación Inversa').toUpperCase(): ''}}</ion-chip>
+
+                    <ion-item lines="none">
+                      <ion-label position="floating">Función de activación</ion-label>
+                      <ion-select formControlName="funcionActivacion" interface="popover" placeholder="Select One">
+                        <ion-select-option value="tangente">Tangente hiperbolica</ion-select-option>
+                        <ion-select-option value="sigmoide">Sigmoide</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </form>
+                </ion-row>
+                <ion-row>
+                  <ion-text>Definición de pesos y umbrales</ion-text>
+                </ion-row>
+                <ion-row>
+                  <ion-col size-xl="5" size-xs="12" size-sm="12" size-lg="6">
+                    <ion-item>
+                      <ion-label slot="start">W<span class="subindice">(ExS)</span> =</ion-label>
+                      <pre slot="start">{{matrizDePesoString}}</pre>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col  size-xl="5" size-xs="12" size-sm="12" size-lg="6">
+                    <ion-item>
+                      <ion-label slot="start">U<span class="subindice">(S)</span> =</ion-label>
+                      <pre slot="start">{{vectorUmbralesString}}</pre>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col>
+                    <ion-chip (click)="generateMatriz()">
+                      <ion-icon name="reload"></ion-icon>
+                    </ion-chip>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <form [formGroup]="formAdaline" (ngSubmit)="submitBackPropagation()">
                     <ion-button type="submit">Entrenar</ion-button>
                   </form>
                 </ion-row>

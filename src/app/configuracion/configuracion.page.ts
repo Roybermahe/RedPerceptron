@@ -6,6 +6,7 @@ import {PerceptronService} from '../../models/base/perceptron.service';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AbstractRedPerceptron} from '../../models/base/RedPerceptron.base';
 import {AlertController} from '@ionic/angular';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-configuracion',
@@ -24,11 +25,14 @@ export class ConfiguracionPage implements OnInit {
   formUnicapa: FormGroup;
   perceptron: AbstractRedPerceptron;
   formMulticapa: FormGroup;
+  formAdaline: FormGroup;
+  formBackPropagation: FormGroup;
   constructor(
     private perceptronSvc: PerceptronService,
     private dataAnalitics: ReadFileService,
     private logRed: logRedService,
     private alertCtl: AlertController,
+    private router: Router,
     private fb: FormBuilder
   ) {
   }
@@ -44,11 +48,33 @@ export class ConfiguracionPage implements OnInit {
       rata: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
       errMax: [0, [Validators.required, Validators.min(0), Validators.max(0.99999999999)]]
     });
+    this.formAdaline = this.fb.group({
+      red: ['adaline'],
+      funcionActivacion:['lineal'],
+      // definición de el algoritmo de entrenamiento
+      reglaDelta: [ true],
+      // definición de los parametros de entrenamiento
+      numIteraciones: [10],
+      rata: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      errMax: [0, [Validators.required, Validators.min(0), Validators.max(0.99999999999)]]
+    });
     this.formMulticapa = this.fb.group({
       red: ['multicapa'],
       // definición de el algoritmo de entrenamiento
       capasOcultas: this.fb.array([]),
       reglaDelta: [ true],
+      funcionActivacion:[''],
+      // definición de los parametros de entrenamiento
+      numIteraciones: [10],
+      rata: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      errMax: [0, [Validators.required, Validators.min(0), Validators.max(0.99999999999)]]
+    });
+    this.formBackPropagation = this.fb.group({
+      red: ['backpropagation'],
+      funcionActivacion:[''],
+      // definición de el algoritmo de entrenamiento
+      reglaDelta: [ false ],
+      propagacionInversa: [true],
       // definición de los parametros de entrenamiento
       numIteraciones: [10],
       rata: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
@@ -60,8 +86,6 @@ export class ConfiguracionPage implements OnInit {
       this.vectorDeUmbrales = [];
       this.llenarMatrizDePeso(resp.inputs, resp.outputs);
       this.llenarVectorDeUmbrales(resp.outputs);
-      this.perceptron = this.perceptronSvc.buildPerceptron('unicapa', this.matrizDePeso, this.vectorDeUmbrales);
-      this.perceptronSvc.getForms(this.perceptron, this.formUnicapa);
     });
   }
 
@@ -94,6 +118,11 @@ export class ConfiguracionPage implements OnInit {
     this.logRed.up('Vector de umbrales:' + JSON.stringify(this.vectorDeUmbrales));
   }
 
+  generateMatriz() {
+    this.llenarVectorDeUmbrales(this.datosDeRed.outputs);
+    this.llenarMatrizDePeso(this.datosDeRed.inputs, this.datosDeRed.outputs);
+  }
+
   generateRedData($event: any) {
     this.perceptron = this.perceptronSvc.buildPerceptron($event.target.value, this.matrizDePeso, this.vectorDeUmbrales);
     this.perceptronSvc.getForms(this.perceptron, this.formUnicapa);
@@ -107,10 +136,12 @@ export class ConfiguracionPage implements OnInit {
       if (condition1 === false || condition2 === false) {
         throw new Error('Valores no validos');
       }
+      this.logRed.up('Iniciando entrenamiento');
       this.perceptron = this.perceptronSvc.buildPerceptron('unicapa', this.matrizDePeso, this.vectorDeUmbrales);
       this.perceptronSvc.getForms(this.perceptron, this.formUnicapa);
-      this.logRed.up('Iniciando entrenamiento');
-      this.perceptron.entrenar({});
+      this.router.navigateByUrl('/stadistic').then(async () => {
+        await this.perceptron.entrenar({});
+      });
     } catch (e) {
       const alert = await this.alertCtl.create({message: 'Por favor corrija los parametros de entrenamiento', mode: 'ios'});
       await alert.present();
@@ -151,10 +182,18 @@ export class ConfiguracionPage implements OnInit {
       this.perceptron = this.perceptronSvc.buildPerceptron('multicapa', this.matrizDePeso, this.vectorDeUmbrales);
       this.perceptronSvc.getForms(this.perceptron, this.formMulticapa);
       this.logRed.up('Iniciando entrenamiento');
-      this.perceptron.entrenar({});
+      await this.perceptron.entrenar({});
     } catch (e) {
       const alert = await this.alertCtl.create({message: 'Por favor corrija los parametros de entrenamiento', mode: 'ios'});
       await alert.present();
     }
+  }
+
+  submitAdaline() {
+
+  }
+
+  submitBackPropagation() {
+
   }
 }

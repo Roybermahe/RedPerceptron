@@ -21,7 +21,38 @@ export abstract class AbstractRedPerceptron {
     });
   }
 
+  public sleep(time: number) {
+    return new Promise(r => setTimeout(r, time));
+  }
+
   abstract dataPerceptron(data: FormGroup);
 
   abstract entrenar(data: any);
+
+  download(array: any,namefile: string) {
+    this.exportFile(array, namefile);
+  }
+
+  exportFile( rows, fileTitle?) {
+
+    const jsonObject = JSON.stringify(rows);
+    const csv = '\ufeff' + this.convertToCSV(jsonObject); // support Chinese
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileTitle || 'data.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+
+  /* CSV: convert json to json */
+  convertToCSV(objArray): string {
+    return objArray.toString();
+  }
 }

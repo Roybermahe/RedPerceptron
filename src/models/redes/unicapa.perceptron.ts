@@ -4,11 +4,12 @@ import {Layer, Network} from 'synaptic';
 
 export class UnicapaPerceptron extends AbstractRedPerceptron {
 
-  entrenar(data: any) {
+  async entrenar(data: any) {
     const inputLayer = new Layer(this.EPS.inputs);
     const outputLayer = new Layer(this.EPS.outputs);
 
     this.logRed.cleanData();
+    this.logRed.cleanLabel();
     inputLayer.project(outputLayer);
 
     const myRed = new Network({
@@ -16,20 +17,36 @@ export class UnicapaPerceptron extends AbstractRedPerceptron {
       hidden: [],
       output: outputLayer
     });
-    for (let iter = 0; iter < this.config.value.numIteraciones; iter++) {
-      this.logRed.up('Iteración número:'+(iter+1));
-      this.logRed.upLabels('Iter_'+(iter+1));
-      for (let i = 0; i < this.EPS.inputs; i++) {
-        const Xj = Array.from(this.EPS.patternsArray[i], x => +x);
-        myRed.activate(Xj);
-        this.AplicacionDeFuncionSoma(i);
-        this.escalon(i);
-        myRed.propagate(this.config.value.rata, this.yResults);
-        this.erroresLineales(i);
-        this.erroresDelPatron(i);
-        this.logRed.upData({ data: this.Ep, label: 'Patron_'+(i+1)});
-        this.modificacionPesosUmbrales(i);
+    console.log(this.u);
+    this.download([...this.w], 'Pre-PesosSinapticos');
+    this.download([...this.u], 'Pre-Umbral');
+    try {
+      for (let iter = 0; iter < this.config.value.numIteraciones; iter++) {
+        this.logRed.up('Iteración número:'+(iter+1));
+        this.logRed.upLabels('Iter_'+(iter+1));
+        let sumatoriaEp = 0;
+        for (let i = 0; i < this.EPS.patterns; i++) {
+          const Xj = Array.from(this.EPS.patternsArray[i], x => +x);
+          this.logRed.up('Presentamos el patron: '+JSON.stringify(Xj));
+          myRed.activate(Xj);
+          this.AplicacionDeFuncionSoma(i);
+          this.escalon(i);
+          myRed.propagate(this.config.value.rata, this.yResults);
+          this.erroresLineales(i);
+          this.erroresDelPatron(i);
+          sumatoriaEp += this.Ep;
+          this.logRed.upData({ data: this.Ep, label: 'Patron_'+JSON.stringify(Xj)});
+          this.modificacionPesosUmbrales(i);
+        }
+        const resultado = sumatoriaEp/this.EPS.patterns;
+        this.logRed.upData2({ data: resultado, label: 'Error_de_Iteracion' });
+        this.condicionDeParada(resultado);
+        await this.sleep(1000);
       }
+    } catch (e) {
+
+    } finally {
+
     }
   }
 
@@ -80,10 +97,11 @@ export class UnicapaPerceptron extends AbstractRedPerceptron {
 
   private erroresDelPatron(index: number) {
     this.logRed.up('Paso 4: Error producido por el patron');
+    this.Ep = 0;
     let Ep = 0;
     let log = '';
     for(let i = 0; i < this.ElResults.length ; i++) {
-      Ep = Math.abs(this.ElResults[i]);
+      Ep += Math.abs(this.ElResults[i]);
       log += `|${this.ElResults[i]}|${ i === this.ElResults.length - 1 ? '': ' + '}`;
     }
     log.slice(log.length-1, log.length);
@@ -111,5 +129,14 @@ export class UnicapaPerceptron extends AbstractRedPerceptron {
       this.u[i] = nuevoumbral;
     }
     this.logRed.up('U = '+JSON.stringify(this.u));
+  }
+
+  private condicionDeParada(resultado: number) {
+    const parameters = this.config.value;
+    if(resultado > parameters.errMax) {
+      this.download(this.w,'UltimosPesos');
+      this.download(this.u,'UltimoUmbrales');
+      throw new Error('El entrenamiento alcanzo el error maximo permitido de: '+ parameters.errMax);
+    }
   }
 }

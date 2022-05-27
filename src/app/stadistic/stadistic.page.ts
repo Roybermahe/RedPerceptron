@@ -19,6 +19,7 @@ export class StadisticPage implements OnInit {
   public lineChartLegend = true;
   public lineChartType = 'line';
   public lineChartPlugins = [];
+  lineChartData2: ChartDataset[] = [];
   constructor(
     private logRed: logRedService,
     private analitic: ReadFileService
@@ -30,6 +31,9 @@ export class StadisticPage implements OnInit {
     });
     this.logRed.data.subscribe(resp => {
       this.lineChartData = resp;
+    });
+    this.logRed.data2.subscribe(resp => {
+      this.lineChartData2 = resp;
     });
   }
 

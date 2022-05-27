@@ -7,11 +7,25 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-col size="12">
+      <ion-col size="6">
         <ion-card mode="ios">
           <ion-card-content>
             <canvas baseChart width="400" height="400"
                     [datasets]="lineChartData"
+                    [labels]="lineChartLabels"
+                    [options]="lineChartOptions"
+                    [legend]="lineChartLegend"
+                    [type]="'line'"
+                    [plugins]="lineChartPlugins">
+            </canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card mode="ios">
+          <ion-card-content>
+            <canvas baseChart width="400" height="400"
+                    [datasets]="lineChartData2"
                     [labels]="lineChartLabels"
                     [options]="lineChartOptions"
                     [legend]="lineChartLegend"
