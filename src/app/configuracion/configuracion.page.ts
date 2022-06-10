@@ -91,12 +91,13 @@ export class ConfiguracionPage implements OnInit {
 
   private llenarMatrizDePeso(entradas: number, salidas: number) {
     this.matrizDePesoString = '';
+    this.matrizDePeso = [];
     for (let i = 0; i < entradas; i++) {
       const line = [];
       this.matrizDePesoString += this.matrizDePesoString.length > 0 ? '\n':'';
       for (let j = 0; j < salidas; j++) {
-        const max = 1;
-        const min = -1;
+        const max = -0.1;
+        const min = 0.1;
         const value =  +(Math.random() * (+max - +min) + +min).toFixed(2);
         line.push(value);
         this.matrizDePesoString += `[${value}]`;
@@ -107,6 +108,7 @@ export class ConfiguracionPage implements OnInit {
   }
 
   private llenarVectorDeUmbrales(salidas: number) {
+    this.vectorDeUmbrales = [];
     this.vectorUmbralesString = '';
     for (let i = 0; i < salidas; i++) {
       const max = 1;
@@ -173,13 +175,13 @@ export class ConfiguracionPage implements OnInit {
   async submitMulticapa() {
     const value = this.formMulticapa.value;
     const condition1 = 0 < value.rata && value.rata <= 1;
-    const condition2 = 0 <= value.errMax && value.errMax < 1;
+    const condition2 = 0 <= value.errMax && value.errMax <= 0.1;
     const condition3 = value.capasOcultas.length > 0;
     try{
       if (condition1 === false || condition2 === false || condition3 === false) {
         throw new Error('Valores no validos');
       }
-      this.perceptron = this.perceptronSvc.buildPerceptron('multicapa', this.matrizDePeso, this.vectorDeUmbrales);
+      this.perceptron = this.perceptronSvc.buildPerceptron('multicapa', [...this.matrizDePeso], [...this.vectorDeUmbrales]);
       this.perceptronSvc.getForms(this.perceptron, this.formMulticapa);
       this.logRed.up('Iniciando entrenamiento');
       await this.perceptron.entrenar({});

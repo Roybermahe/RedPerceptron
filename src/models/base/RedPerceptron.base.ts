@@ -12,7 +12,7 @@ export abstract class AbstractRedPerceptron {
   protected Ep: number;
   protected w: number[][] = [];
   protected u: number[] = [];
-  protected config: FormGroup;
+  protected config: any;
   constructor(w: number[][], u: number[], public logRed: logRedService,public analitic: ReadFileService) {
     this.w = w;
     this.u = u;
